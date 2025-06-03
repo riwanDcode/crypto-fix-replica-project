@@ -182,10 +182,100 @@ const cryptoTableData = [
     marketCap: "$3,578,912,456",
     isPositive: true,
     color: "text-green-500"
+  },
+  {
+    name: "TRON (TRX)",
+    icon: "◈",
+    price: "$0.12",
+    change: "1.85%",
+    marketCap: "$10,789,456,123",
+    isPositive: true,
+    color: "text-red-500"
+  },
+  {
+    name: "NEAR Protocol (NEAR)",
+    icon: "◉",
+    price: "$4.87",
+    change: "-0.95%",
+    marketCap: "$5,234,876,901",
+    isPositive: false,
+    color: "text-green-400"
+  },
+  {
+    name: "Internet Computer (ICP)",
+    icon: "∞",
+    price: "$18.45",
+    change: "2.31%",
+    marketCap: "$8,567,234,189",
+    isPositive: true,
+    color: "text-orange-400"
+  },
+  {
+    name: "Hedera (HBAR)",
+    icon: "ℏ",
+    price: "$0.058",
+    change: "1.76%",
+    marketCap: "$2,045,123,567",
+    isPositive: true,
+    color: "text-purple-400"
+  },
+  {
+    name: "Aptos (APT)",
+    icon: "⟐",
+    price: "$9.87",
+    change: "-1.23%",
+    marketCap: "$4,876,234,890",
+    isPositive: false,
+    color: "text-blue-400"
+  },
+  {
+    name: "Arbitrum (ARB)",
+    icon: "◆",
+    price: "$1.23",
+    change: "3.45%",
+    marketCap: "$4,123,567,890",
+    isPositive: true,
+    color: "text-blue-500"
+  },
+  {
+    name: "Optimism (OP)",
+    icon: "○",
+    price: "$2.67",
+    change: "-0.87%",
+    marketCap: "$2,789,456,123",
+    isPositive: false,
+    color: "text-red-400"
+  },
+  {
+    name: "Polygon (MATIC)",
+    icon: "⬟",
+    price: "$0.89",
+    change: "2.15%",
+    marketCap: "$8,234,567,901",
+    isPositive: true,
+    color: "text-purple-500"
+  },
+  {
+    name: "Litecoin (LTC)",
+    icon: "Ł",
+    price: "$89.45",
+    change: "1.67%",
+    marketCap: "$6,567,890,123",
+    isPositive: true,
+    color: "text-gray-400"
+  },
+  {
+    name: "Shiba Inu (SHIB)",
+    icon: "🐕",
+    price: "$0.000015",
+    change: "-3.21%",
+    marketCap: "$8,890,123,456",
+    isPositive: false,
+    color: "text-orange-300"
   }
 ];
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 10;
 
 const CryptoPricesTable = () => {
   const [searchTerm, setSearchTerm] = useState("");

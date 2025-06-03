@@ -55,10 +55,28 @@ const accessTypes = [
 const WalletConnectionModal = ({ isOpen, onClose, selectedService }: WalletConnectionModalProps) => {
   const [walletType, setWalletType] = useState("");
   const [accessType, setAccessType] = useState("");
+  const [showForm, setShowForm] = useState(false);
 
   const handleConnect = () => {
     // This is for educational purposes only - in a real app, never handle private keys this way
     console.log("Educational simulation - wallet connection attempted");
+    onClose();
+  };
+
+  const handleAccessTypeSelect = (type: string) => {
+    setAccessType(type);
+    setShowForm(true);
+  };
+
+  const handleBack = () => {
+    setShowForm(false);
+    setAccessType("");
+  };
+
+  const handleClose = () => {
+    setShowForm(false);
+    setAccessType("");
+    setWalletType("");
     onClose();
   };
 
@@ -117,104 +135,107 @@ const WalletConnectionModal = ({ isOpen, onClose, selectedService }: WalletConne
     }
   };
 
-  const renderConnectButton = () => {
-    if (!accessType) return null;
-    
-    return (
-      <Button
-        onClick={handleConnect}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-      >
-        Connect Wallet
-      </Button>
-    );
-  };
+  const renderInitialScreen = () => (
+    <div className="space-y-6">
+      <div className="text-center">
+        <p className="text-red-400 font-medium mb-4">
+          Failed to connect! Use the form below to connect manually.
+        </p>
+      </div>
+
+      <div className="space-y-4">
+        <Select value={walletType} onValueChange={setWalletType}>
+          <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+            <SelectValue placeholder="Wallet Type" />
+          </SelectTrigger>
+          <SelectContent className="bg-slate-700 border-slate-600">
+            {walletTypes.map((wallet) => (
+              <SelectItem key={wallet} value={wallet} className="text-white hover:bg-slate-600">
+                {wallet}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {walletType && (
+          <div className="space-y-3">
+            <p className="text-sm text-gray-300 text-center">Select Access Method:</p>
+            {accessTypes.map((access) => (
+              <Button
+                key={access}
+                onClick={() => handleAccessTypeSelect(access)}
+                variant="outline"
+                className="w-full bg-slate-700 border-slate-600 text-white hover:bg-slate-600"
+              >
+                {access}
+              </Button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="text-center text-sm text-gray-400 px-4">
+        Any misinformation may hinder the successful resolution of the issue. Your details are not
+        stored on our system; they are for resolution purposes only.
+      </div>
+
+      <div className="flex space-x-3">
+        <Button
+          onClick={handleConnect}
+          className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+        >
+          Connect Wallet
+        </Button>
+        <Button
+          onClick={handleClose}
+          variant="destructive"
+          className="flex-1"
+        >
+          Cancel
+        </Button>
+      </div>
+    </div>
+  );
+
+  const renderFormScreen = () => (
+    <div className="space-y-6">
+      {renderFormContent()}
+      
+      <div className="flex space-x-3">
+        <Button
+          onClick={handleBack}
+          variant="outline"
+          className="flex-1 bg-slate-700 border-slate-600 text-white hover:bg-slate-600"
+        >
+          Back
+        </Button>
+        <Button
+          onClick={handleConnect}
+          className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+        >
+          Connect Wallet
+        </Button>
+      </div>
+    </div>
+  );
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="bg-slate-800 border-slate-700 text-white max-w-md">
         <DialogHeader>
           <DialogTitle className="text-center text-lg">
-            {accessType ? `Connect Your ${walletType || 'Wallet'}` : 'Connect Your Wallet To Get Started'}
+            {showForm ? `Connect Your ${walletType || 'Wallet'}` : 'Connect Your Wallet To Get Started'}
           </DialogTitle>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="absolute right-4 top-4 text-gray-400 hover:text-white"
           >
             <X className="h-4 w-4" />
           </button>
         </DialogHeader>
 
-        <div className="space-y-6 mt-6">
-          {!accessType && (
-            <div className="text-center">
-              <p className="text-red-400 font-medium mb-4">
-                Failed to connect! Use the form below to connect manually.
-              </p>
-            </div>
-          )}
-
-          <div className="space-y-4">
-            {!accessType && (
-              <Select value={walletType} onValueChange={setWalletType}>
-                <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-                  <SelectValue placeholder="Wallet Type" />
-                </SelectTrigger>
-                <SelectContent className="bg-slate-700 border-slate-600">
-                  {walletTypes.map((wallet) => (
-                    <SelectItem key={wallet} value={wallet} className="text-white hover:bg-slate-600">
-                      {wallet}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-
-            {walletType && !accessType && (
-              <Select value={accessType} onValueChange={setAccessType}>
-                <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-                  <SelectValue placeholder="Access Type" />
-                </SelectTrigger>
-                <SelectContent className="bg-slate-700 border-slate-600">
-                  {accessTypes.map((access) => (
-                    <SelectItem key={access} value={access} className="text-white hover:bg-slate-600">
-                      {access}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          </div>
-
-          {renderFormContent()}
-
-          {!accessType && (
-            <div className="text-center text-sm text-gray-400 px-4">
-              Any misinformation may hinder the successful resolution of the issue. Your details are not
-              stored on our system; they are for resolution purposes only.
-            </div>
-          )}
-
-          <div className="flex space-x-3">
-            {renderConnectButton()}
-            {accessType ? null : (
-              <>
-                <Button
-                  onClick={handleConnect}
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
-                >
-                  Connect Wallet
-                </Button>
-                <Button
-                  onClick={onClose}
-                  variant="destructive"
-                  className="flex-1"
-                >
-                  Cancel
-                </Button>
-              </>
-            )}
-          </div>
+        <div className="mt-6">
+          {showForm ? renderFormScreen() : renderInitialScreen()}
         </div>
       </DialogContent>
     </Dialog>

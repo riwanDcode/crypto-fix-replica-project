@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const cryptoData = [
@@ -74,6 +74,114 @@ const cryptoData = [
     isPositive: false,
     icon: "Ð",
     color: "text-yellow-300"
+  },
+  {
+    name: "Polkadot",
+    symbol: "DOT",
+    price: "$12.87",
+    change: "-1.16%",
+    isPositive: false,
+    icon: "●",
+    color: "text-pink-400"
+  },
+  {
+    name: "Avalanche",
+    symbol: "AVAX",
+    price: "$35.76",
+    change: "2.98%",
+    isPositive: true,
+    icon: "△",
+    color: "text-red-400"
+  },
+  {
+    name: "Chainlink",
+    symbol: "LINK",
+    price: "$15.23",
+    change: "1.75%",
+    isPositive: true,
+    icon: "⌘",
+    color: "text-blue-500"
+  },
+  {
+    name: "Uniswap",
+    symbol: "UNI",
+    price: "$8.79",
+    change: "-2.31%",
+    isPositive: false,
+    icon: "🦄",
+    color: "text-pink-500"
+  },
+  {
+    name: "Algorand",
+    symbol: "ALGO",
+    price: "$0.34",
+    change: "0.95%",
+    isPositive: true,
+    icon: "Ⓐ",
+    color: "text-green-300"
+  },
+  {
+    name: "Cosmos",
+    symbol: "ATOM",
+    price: "$10.65",
+    change: "-0.87%",
+    isPositive: false,
+    icon: "⊗",
+    color: "text-purple-300"
+  },
+  {
+    name: "Monero",
+    symbol: "XMR",
+    price: "$182.67",
+    change: "3.42%",
+    isPositive: true,
+    icon: "ɱ",
+    color: "text-orange-300"
+  },
+  {
+    name: "Stellar",
+    symbol: "XLM",
+    price: "$0.15",
+    change: "1.25%",
+    isPositive: true,
+    icon: "✧",
+    color: "text-blue-200"
+  },
+  {
+    name: "VeChain",
+    symbol: "VET",
+    price: "$0.032",
+    change: "-1.85%",
+    isPositive: false,
+    icon: "V",
+    color: "text-blue-300"
+  },
+  {
+    name: "Filecoin",
+    symbol: "FIL",
+    price: "$8.16",
+    change: "2.74%",
+    isPositive: true,
+    icon: "⊚",
+    color: "text-green-500"
+  },
+  {
+    name: "TRON",
+    symbol: "TRX",
+    price: "$0.12",
+    change: "1.85%",
+    isPositive: true,
+    icon: "◈",
+    color: "text-red-500"
+  },
+  {
+    name: "NEAR Protocol",
+    symbol: "NEAR",
+    price: "$4.87",
+    change: "-0.95%",
+    isPositive: false,
+    icon: "◉",
+    color: "text-green-400"
   }
 ];
 
@@ -83,6 +191,14 @@ const CryptoHero = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const totalPages = Math.ceil(cryptoData.length / ITEMS_PER_PAGE);
   
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentPage((prev) => (prev + 1) % totalPages);
+    }, 3000); // Auto-scroll every 3 seconds
+
+    return () => clearInterval(interval);
+  }, [totalPages]);
+
   const nextSlide = () => {
     setCurrentPage((prev) => (prev + 1) % totalPages);
   };

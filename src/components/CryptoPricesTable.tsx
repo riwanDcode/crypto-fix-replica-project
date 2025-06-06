@@ -322,7 +322,7 @@ const CryptoPricesTable = () => {
           {visibleData.map((crypto, index) => (
             <div key={index} className="grid grid-cols-4 gap-4 p-4 hover:bg-slate-700 transition-colors">
               <div className="flex items-center space-x-3">
-                <span className={`text-2xl ${crypto.color}`}>{crypto.icon}</span>
+                <span className={`text-3xl ${crypto.color}`}>{crypto.icon}</span>
                 <span className="font-medium">{crypto.name}</span>
               </div>
               <div className="font-semibold">{crypto.price}</div>

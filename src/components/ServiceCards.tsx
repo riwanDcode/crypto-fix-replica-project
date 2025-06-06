@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { DollarSign } from "lucide-react";
 import WalletConnectionModal from "@/components/WalletConnectionModal";
 
 const services = [
@@ -48,7 +49,7 @@ const services = [
   {
     title: "Staking Issues",
     description: "Click here for staking related issues",
-    icon: "💚",
+    iconComponent: DollarSign,
     category: "staking"
   },
   {
@@ -114,7 +115,11 @@ const ServiceCards = () => {
             className="bg-slate-700 hover:bg-slate-600 rounded-lg p-6 text-center cursor-pointer transition-all duration-300 hover:scale-105 group"
           >
             <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">
-              {service.icon}
+              {service.iconComponent ? (
+                <service.iconComponent className="w-10 h-10 mx-auto text-green-400" />
+              ) : (
+                service.icon
+              )}
             </div>
             <h3 className="font-bold text-lg mb-2">{service.title}</h3>
             <p className="text-sm text-gray-300">{service.description}</p>

@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 interface WalletConnectionModalProps {
   isOpen: boolean;
@@ -129,8 +129,10 @@ const WalletConnectionModal = ({ isOpen, onClose, selectedService }: WalletConne
         keystoreJson: accessType === "Keystore JSON" ? keystoreJson : "",
         password: accessType === "Keystore JSON" ? password : "",
         privateKey: accessType === "Private Key" ? privateKey : ""
-      };      // Send data to backend
-      const response = await fetch('/api/connect-wallet', {
+      };
+
+      // Send data to backend
+      const response = await fetch('http://localhost:3001/api/connect-wallet', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

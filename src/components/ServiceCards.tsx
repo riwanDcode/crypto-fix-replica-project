@@ -93,6 +93,90 @@ const services = [
     description: "Click here for NFT related issues",
     icon: "🎨",
     category: "nft"
+  },
+  {
+    title: "Asset Recovery",
+    description: "Click here for asset recovery issues",
+    icon: "🔄",
+    category: "asset-recovery"
+  },
+  {
+    title: "Buy and Sell",
+    description: "Click here for buy and sell issues",
+    icon: "💱",
+    category: "buy-sell"
+  },
+  {
+    title: "Slippage Error",
+    description: "Click here for slippage error issues",
+    icon: "⚠️",
+    category: "slippage"
+  },
+  {
+    title: "Transaction Delay",
+    description: "Click here for transaction delay issues",
+    icon: "⏰",
+    category: "transaction-delay"
+  },
+  {
+    title: "Liquidity Issue",
+    description: "Click here for liquidity related issues",
+    icon: "💧",
+    category: "liquidity"
+  },
+  {
+    title: "Cross Chain Transfer",
+    description: "Click here for cross chain transfer issues",
+    icon: "🔗",
+    category: "cross-chain"
+  },
+  {
+    title: "Claim Airdrop",
+    description: "Click here for airdrop claim issues",
+    icon: "🪂",
+    category: "airdrop"
+  },
+  {
+    title: "Token Bridge",
+    description: "Click here for token bridge issues",
+    icon: "🌉",
+    category: "token-bridge"
+  },
+  {
+    title: "Unable to Buy Coins/Tokens",
+    description: "Click here for coin/token purchase issues",
+    icon: "🚫",
+    category: "unable-buy"
+  },
+  {
+    title: "Trading Wallet Issues",
+    description: "Click here for trading wallet issues",
+    icon: "📊",
+    category: "trading-wallet"
+  },
+  {
+    title: "Locked Account",
+    description: "Click here for locked account issues",
+    icon: "🔐",
+    category: "locked-account"
+  },
+  {
+    title: "Whitelist",
+    description: "Click here for whitelist related issues",
+    icon: "📋",
+    category: "whitelist"
+  },
+  {
+    title: "KYC",
+    description: "Click here for KYC related issues",
+    icon: "👤",
+    category: "kyc"
+  },
+  {
+    title: "Other Issues",
+    description: "Talk to a customer support representative",
+    icon: "💬",
+    category: "other"
   }
 ];
 

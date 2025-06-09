@@ -338,7 +338,7 @@ const CryptoPricesTable = () => {
       {/* Pagination */}
       <div className="flex justify-center mt-6">
         <div className="flex space-x-2">
-          {pageNumbers.map((page) => (
+          {Array.from({ length: 10 }, (_, i) => i + 1).map((page) => (
             <button
               key={page}
               onClick={() => setCurrentPage(page - 1)}

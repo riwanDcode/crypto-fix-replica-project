@@ -1,50 +1,197 @@
 
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { fetchCryptocurrencyPrices } from "@/services/cryptoService";
 
-interface CryptoData {
-  name: string;
-  symbol: string;
-  price: string;
-  change: string;
-  isPositive: boolean;
-  icon: string;
-  color: string;
-}
+const cryptoData = [
+  {
+    name: "Bitcoin",
+    symbol: "BTC",
+    price: "$105,274",
+    change: "1.03%",
+    isPositive: true,
+    icon: "₿",
+    color: "text-orange-400"
+  },
+  {
+    name: "Ethereum",
+    symbol: "ETH",
+    price: "$2,609.53",
+    change: "5.08%",
+    isPositive: true,
+    icon: "Ξ",
+    color: "text-gray-300"
+  },
+  {
+    name: "Tether",
+    symbol: "USDT",
+    price: "$1",
+    change: "0.01%",
+    isPositive: true,
+    icon: "₮",
+    color: "text-green-400"
+  },
+  {
+    name: "Solana",
+    symbol: "SOL",
+    price: "$160.96",
+    change: "4.57%",
+    isPositive: true,
+    icon: "◎",
+    color: "text-purple-400"
+  },
+  {
+    name: "BNB",
+    symbol: "BNB",
+    price: "$692.45",
+    change: "2.34%",
+    isPositive: true,
+    icon: "♦",
+    color: "text-yellow-400"
+  },
+  {
+    name: "XRP",
+    symbol: "XRP",
+    price: "$2.08",
+    change: "-1.25%",
+    isPositive: false,
+    icon: "✗",
+    color: "text-blue-400"
+  },
+  {
+    name: "Cardano",
+    symbol: "ADA",
+    price: "$0.78",
+    change: "3.15%",
+    isPositive: true,
+    icon: "⋈",
+    color: "text-blue-600"
+  },
+  {
+    name: "Dogecoin",
+    symbol: "DOGE",
+    price: "$0.35",
+    change: "-2.67%",
+    isPositive: false,
+    icon: "Ð",
+    color: "text-yellow-300"
+  },
+  {
+    name: "Polkadot",
+    symbol: "DOT",
+    price: "$12.87",
+    change: "-1.16%",
+    isPositive: false,
+    icon: "●",
+    color: "text-pink-400"
+  },
+  {
+    name: "Avalanche",
+    symbol: "AVAX",
+    price: "$35.76",
+    change: "2.98%",
+    isPositive: true,
+    icon: "△",
+    color: "text-red-400"
+  },
+  {
+    name: "Chainlink",
+    symbol: "LINK",
+    price: "$15.23",
+    change: "1.75%",
+    isPositive: true,
+    icon: "⌘",
+    color: "text-blue-500"
+  },
+  {
+    name: "Uniswap",
+    symbol: "UNI",
+    price: "$8.79",
+    change: "-2.31%",
+    isPositive: false,
+    icon: "🦄",
+    color: "text-pink-500"
+  },
+  {
+    name: "Algorand",
+    symbol: "ALGO",
+    price: "$0.34",
+    change: "0.95%",
+    isPositive: true,
+    icon: "Ⓐ",
+    color: "text-green-300"
+  },
+  {
+    name: "Cosmos",
+    symbol: "ATOM",
+    price: "$10.65",
+    change: "-0.87%",
+    isPositive: false,
+    icon: "⊗",
+    color: "text-purple-300"
+  },
+  {
+    name: "Monero",
+    symbol: "XMR",
+    price: "$182.67",
+    change: "3.42%",
+    isPositive: true,
+    icon: "ɱ",
+    color: "text-orange-300"
+  },
+  {
+    name: "Stellar",
+    symbol: "XLM",
+    price: "$0.15",
+    change: "1.25%",
+    isPositive: true,
+    icon: "✧",
+    color: "text-blue-200"
+  },
+  {
+    name: "VeChain",
+    symbol: "VET",
+    price: "$0.032",
+    change: "-1.85%",
+    isPositive: false,
+    icon: "V",
+    color: "text-blue-300"
+  },
+  {
+    name: "Filecoin",
+    symbol: "FIL",
+    price: "$8.16",
+    change: "2.74%",
+    isPositive: true,
+    icon: "⊚",
+    color: "text-green-500"
+  },
+  {
+    name: "TRON",
+    symbol: "TRX",
+    price: "$0.12",
+    change: "1.85%",
+    isPositive: true,
+    icon: "◈",
+    color: "text-red-500"
+  },
+  {
+    name: "NEAR Protocol",
+    symbol: "NEAR",
+    price: "$4.87",
+    change: "-0.95%",
+    isPositive: false,
+    icon: "◉",
+    color: "text-green-400"
+  }
+];
 
 const ITEMS_PER_PAGE = 4;
 
 const CryptoHero = () => {
   const [currentPage, setCurrentPage] = useState(0);
-  const [cryptoData, setCryptoData] = useState<CryptoData[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    loadCryptoData();
-  }, []);
-
-  const loadCryptoData = async () => {
-    const storedApiKey = localStorage.getItem('cmc_api_key');
-    if (!storedApiKey) return;
-
-    setIsLoading(true);
-    try {
-      const data = await fetchCryptocurrencyPrices(storedApiKey);
-      // Take only the first 20 for the hero section
-      setCryptoData(data.slice(0, 20));
-    } catch (error) {
-      console.error('Error loading crypto data for hero:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const totalPages = Math.ceil(cryptoData.length / ITEMS_PER_PAGE);
   
   useEffect(() => {
-    if (totalPages === 0) return;
-    
     const interval = setInterval(() => {
       setCurrentPage((prev) => (prev + 1) % totalPages);
     }, 3000); // Auto-scroll every 3 seconds
@@ -64,19 +211,6 @@ const CryptoHero = () => {
     currentPage * ITEMS_PER_PAGE, 
     (currentPage + 1) * ITEMS_PER_PAGE
   );
-
-  if (isLoading || cryptoData.length === 0) {
-    return (
-      <section className="text-white">
-        <h2 className="text-2xl font-bold text-center mb-8">The Platform Offers</h2>
-        <div className="flex justify-center items-center h-64">
-          <p className="text-gray-400">
-            {isLoading ? "Loading cryptocurrency data..." : "Configure API key in the table below to see live prices"}
-          </p>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section className="text-white">
@@ -117,19 +251,17 @@ const CryptoHero = () => {
           </button>
         </div>
 
-        {totalPages > 1 && (
-          <div className="flex justify-center mt-6">
-            {Array.from({ length: totalPages }).map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentPage(index)}
-                className={`w-3 h-3 mx-1 rounded-full ${
-                  currentPage === index ? 'bg-orange-400' : 'bg-slate-600'
-                }`}
-              ></button>
-            ))}
-          </div>
-        )}
+        <div className="flex justify-center mt-6">
+          {Array.from({ length: totalPages }).map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentPage(index)}
+              className={`w-3 h-3 mx-1 rounded-full ${
+                currentPage === index ? 'bg-orange-400' : 'bg-slate-600'
+              }`}
+            ></button>
+          ))}
+        </div>
       </div>
     </section>
   );

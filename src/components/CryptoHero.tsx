@@ -93,8 +93,22 @@ const CryptoHero = () => {
                   key={`${crypto.symbol}-${index}`}
                   className="bg-slate-800 rounded-lg p-6 text-center transform transition-all duration-300 hover:scale-105 hover:bg-slate-700"
                 >
-                  <div className={`text-4xl mb-2 ${crypto.color}`}>
-                    {crypto.icon}
+                  <div className="mb-2 flex justify-center">
+                    <img 
+                      src={crypto.imageUrl} 
+                      alt={`${crypto.name} logo`}
+                      className="w-12 h-12 object-contain"
+                      onError={(e) => {
+                        // Fallback to unicode icon if image fails to load
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        const fallback = target.nextElementSibling as HTMLElement;
+                        if (fallback) fallback.style.display = 'block';
+                      }}
+                    />
+                    <span className={`text-4xl ${crypto.color} hidden`}>
+                      {crypto.icon}
+                    </span>
                   </div>
                   <h3 className="font-semibold text-lg mb-1">{crypto.name.split(' (')[0]}</h3>
                   <p className={`text-sm mb-2 ${crypto.isPositive ? 'text-green-400' : 'text-red-400'}`}>

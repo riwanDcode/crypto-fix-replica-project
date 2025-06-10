@@ -100,7 +100,23 @@ const CryptoPricesTable = () => {
                 visibleData.map((crypto, index) => (
                   <div key={index} className="grid grid-cols-4 gap-4 p-4 hover:bg-slate-700 transition-colors">
                     <div className="flex items-center space-x-3">
-                      <span className={`text-3xl ${crypto.color}`}>{crypto.icon}</span>
+                      <div className="w-8 h-8 flex items-center justify-center">
+                        <img 
+                          src={crypto.imageUrl} 
+                          alt={`${crypto.name} logo`}
+                          className="w-8 h-8 object-contain"
+                          onError={(e) => {
+                            // Fallback to unicode icon if image fails to load
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                            const fallback = target.nextElementSibling as HTMLElement;
+                            if (fallback) fallback.style.display = 'block';
+                          }}
+                        />
+                        <span className={`text-2xl ${crypto.color} hidden`}>
+                          {crypto.icon}
+                        </span>
+                      </div>
                       <span className="font-medium">{crypto.name}</span>
                     </div>
                     <div className="font-semibold">{crypto.price}</div>

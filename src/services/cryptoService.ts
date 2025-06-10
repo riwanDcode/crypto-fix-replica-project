@@ -1,4 +1,3 @@
-
 // CoinGecko API service for fetching real-time cryptocurrency data
 const COINGECKO_API_BASE = 'https://api.coingecko.com/api/v3';
 
@@ -12,6 +11,7 @@ export interface CryptoData {
   isPositive: boolean;
   icon: string;
   color: string;
+  imageUrl: string;
 }
 
 // Mapping of crypto IDs to their display properties
@@ -88,7 +88,8 @@ export const fetchCryptoPrices = async (): Promise<CryptoData[]> => {
         marketCap: formatMarketCap(coin.market_cap || 0),
         isPositive: (coin.price_change_percentage_24h || 0) >= 0,
         icon: mapping?.icon || '◯',
-        color: mapping?.color || 'text-gray-400'
+        color: mapping?.color || 'text-gray-400',
+        imageUrl: coin.image
       };
     });
   } catch (error) {

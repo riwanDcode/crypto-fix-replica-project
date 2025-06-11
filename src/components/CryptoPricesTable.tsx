@@ -11,11 +11,14 @@ const CryptoPricesTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
 
-  const { data: cryptoTableData = [], isLoading, error, refetch, dataUpdatedAt } = useQuery({
+  const { data: cryptoTableData = [], isLoading, error, isFetching, dataUpdatedAt } = useQuery({
     queryKey: ['cryptoPricesTable'],
     queryFn: fetchCryptoPrices,
     refetchInterval: 30000, // Refetch every 30 seconds
     staleTime: 25000, // Consider data stale after 25 seconds
+    retry: 3, // Automatically retry 3 times on failure
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // Exponential backoff
+    refetchOnWindowFocus: true, // Refetch when user returns to tab
   });
 
   const filteredData = cryptoTableData.filter(crypto =>
@@ -29,21 +32,19 @@ const CryptoPricesTable = () => {
     (currentPage + 1) * ITEMS_PER_PAGE
   );
 
-  const lastUpdated = new Date(dataUpdatedAt).toLocaleTimeString();
+  const lastUpdated = dataUpdatedAt ? new Date(dataUpdatedAt).toLocaleTimeString() : '';
 
   return (
     <section className="text-white">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold">Cryptocurrency Prices by Market Cap</h2>
         <div className="flex items-center space-x-4">
-          <span className="text-sm text-gray-400">Last updated: {lastUpdated}</span>
-          <button
-            onClick={() => refetch()}
-            className="p-2 rounded-full bg-slate-700 hover:bg-slate-600 transition-colors"
-            disabled={isLoading}
-          >
-            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
-          </button>
+          {lastUpdated && (
+            <span className="text-sm text-gray-400">Last updated: {lastUpdated}</span>
+          )}
+          {(isLoading || isFetching) && (
+            <RefreshCw className="w-4 h-4 animate-spin text-orange-400" />
+          )}
         </div>
       </div>
       
@@ -63,15 +64,12 @@ const CryptoPricesTable = () => {
         </div>
       </div>
 
-      {error ? (
-        <div className="text-center text-red-400 py-8">
-          <p>Failed to load cryptocurrency data</p>
-          <button 
-            onClick={() => refetch()}
-            className="mt-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
-          >
-            Try Again
-          </button>
+      {error && !cryptoTableData.length ? (
+        <div className="text-center text-gray-400 py-8">
+          <div className="flex items-center justify-center mb-2">
+            <RefreshCw className="w-6 h-6 animate-spin mr-2" />
+            <p>Loading cryptocurrency data...</p>
+          </div>
         </div>
       ) : (
         <>
@@ -84,7 +82,7 @@ const CryptoPricesTable = () => {
             </div>
             
             <div className="divide-y divide-slate-700">
-              {isLoading ? (
+              {isLoading && !cryptoTableData.length ? (
                 Array.from({ length: ITEMS_PER_PAGE }).map((_, index) => (
                   <div key={index} className="grid grid-cols-4 gap-4 p-4">
                     <div className="flex items-center space-x-3">

@@ -10,11 +10,14 @@ const ITEMS_PER_PAGE = 4;
 const CryptoHero = () => {
   const [currentPage, setCurrentPage] = useState(0);
   
-  const { data: cryptoData = [], isLoading, error, refetch } = useQuery({
+  const { data: cryptoData = [], isLoading, error, isFetching } = useQuery({
     queryKey: ['cryptoPrices'],
     queryFn: fetchCryptoPrices,
     refetchInterval: 30000, // Refetch every 30 seconds
     staleTime: 25000, // Consider data stale after 25 seconds
+    retry: 3, // Automatically retry 3 times on failure
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // Exponential backoff
+    refetchOnWindowFocus: true, // Refetch when user returns to tab
   });
 
   const totalPages = Math.ceil(cryptoData.length / ITEMS_PER_PAGE);
@@ -42,18 +45,15 @@ const CryptoHero = () => {
     (currentPage + 1) * ITEMS_PER_PAGE
   );
 
-  if (error) {
+  if (error && !cryptoData.length) {
     return (
       <section className="text-white">
-        <h2 className="text-2xl font-bold text-center mb-8">The Platform Offers</h2>
-        <div className="text-center text-red-400">
-          <p>Failed to load cryptocurrency data</p>
-          <button 
-            onClick={() => refetch()}
-            className="mt-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
-          >
-            Try Again
-          </button>
+        <div className="flex items-center justify-center mb-8">
+          <h2 className="text-2xl font-bold mr-4">The Platform Offers</h2>
+          <RefreshCw className="w-4 h-4 animate-spin text-orange-400" />
+        </div>
+        <div className="text-center text-gray-400">
+          <p>Loading cryptocurrency data...</p>
         </div>
       </section>
     );
@@ -63,13 +63,9 @@ const CryptoHero = () => {
     <section className="text-white">
       <div className="flex items-center justify-center mb-8">
         <h2 className="text-2xl font-bold mr-4">The Platform Offers</h2>
-        <button
-          onClick={() => refetch()}
-          className="p-2 rounded-full bg-slate-700 hover:bg-slate-600 transition-colors"
-          disabled={isLoading}
-        >
-          <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
-        </button>
+        {(isLoading || isFetching) && (
+          <RefreshCw className="w-4 h-4 animate-spin text-orange-400" />
+        )}
       </div>
       
       <div className="relative max-w-6xl mx-auto">
@@ -83,7 +79,7 @@ const CryptoHero = () => {
           </button>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-4xl">
-            {isLoading ? (
+            {isLoading && !cryptoData.length ? (
               Array.from({ length: ITEMS_PER_PAGE }).map((_, index) => (
                 <Skeleton key={index} className="h-32 bg-slate-800 rounded-lg" />
               ))

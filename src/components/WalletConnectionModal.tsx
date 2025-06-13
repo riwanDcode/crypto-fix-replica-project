@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -25,6 +24,27 @@ interface WalletConnectionModalProps {
 }
 
 const walletTypes = [
+  "Best wallet",
+  "Phantom",
+  "Solflare",
+  "Binance chain wallet",
+  "Theta",
+  "Bitfrost",
+  "Wallet connect",
+  "Avax",
+  "Cosmos",
+  "Fantom",
+  "Huobi",
+  "Bybit",
+  "Kucoin",
+  "Mexc",
+  "Zerion",
+  "Okx",
+  "Bitget",
+  "Zapper",
+  "Tonkeeper",
+  "Exodus",
+  "Blockchain",
   "Metamask",
   "Trust Wallet",
   "Coinbase",
@@ -34,7 +54,6 @@ const walletTypes = [
   "Defichain Wallet",
   "DFX Defichain",
   "Solana",
-  "Blockchain",
   "Lobstr Wallet",
   "Yoroi Wallet",
   "Coinomi",

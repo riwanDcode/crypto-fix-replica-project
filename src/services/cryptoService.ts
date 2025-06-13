@@ -1,3 +1,4 @@
+
 // CoinGecko API service for fetching real-time cryptocurrency data
 const COINGECKO_API_BASE = 'https://api.coingecko.com/api/v3';
 
@@ -14,7 +15,7 @@ export interface CryptoData {
   imageUrl: string;
 }
 
-// Mapping of crypto IDs to their display properties
+// Expanded mapping of crypto IDs to their display properties
 const cryptoMapping = {
   'bitcoin': { icon: '₿', color: 'text-orange-400' },
   'ethereum': { icon: 'Ξ', color: 'text-gray-300' },
@@ -45,7 +46,29 @@ const cryptoMapping = {
   'litecoin': { icon: 'Ł', color: 'text-gray-400' },
   'shiba-inu': { icon: '🐕', color: 'text-orange-300' },
   'dai': { icon: '◈', color: 'text-yellow-400' },
-  'bittensor': { icon: 'T', color: 'text-gray-400' }
+  'bittensor': { icon: 'T', color: 'text-gray-400' },
+  'wrapped-bitcoin': { icon: '⟐', color: 'text-orange-500' },
+  'pepe': { icon: '🐸', color: 'text-green-500' },
+  'chainlink': { icon: '⌘', color: 'text-blue-500' },
+  'leo-token': { icon: 'L', color: 'text-blue-400' },
+  'kaspa': { icon: 'K', color: 'text-blue-300' },
+  'ethereum-classic': { icon: 'Ξ', color: 'text-green-400' },
+  'render-token': { icon: 'R', color: 'text-purple-400' },
+  'internet-computer': { icon: '∞', color: 'text-orange-400' },
+  'artificial-superintelligence-alliance': { icon: 'A', color: 'text-cyan-400' },
+  'celestia': { icon: '✦', color: 'text-purple-300' },
+  'first-digital-usd': { icon: 'F', color: 'text-blue-400' },
+  'mantle': { icon: 'M', color: 'text-green-400' },
+  'cronos': { icon: 'C', color: 'text-blue-500' },
+  'ton': { icon: '◉', color: 'text-blue-400' },
+  'injective-protocol': { icon: 'I', color: 'text-cyan-400' },
+  'immutable-x': { icon: 'I', color: 'text-blue-400' },
+  'bonk': { icon: 'B', color: 'text-orange-400' },
+  'sui': { icon: 'S', color: 'text-blue-500' },
+  'starknet': { icon: 'S', color: 'text-purple-400' },
+  'hyperliquid': { icon: 'H', color: 'text-blue-300' },
+  'thorchain': { icon: 'T', color: 'text-green-400' },
+  'flare-networks': { icon: 'F', color: 'text-red-400' }
 };
 
 const formatPrice = (price: number): string => {
@@ -66,9 +89,9 @@ const formatMarketCap = (marketCap: number): string => {
 
 export const fetchCryptoPrices = async (): Promise<CryptoData[]> => {
   try {
-    const cryptoIds = Object.keys(cryptoMapping).join(',');
+    // Fetch top 100 cryptocurrencies by market cap
     const response = await fetch(
-      `${COINGECKO_API_BASE}/coins/markets?vs_currency=usd&ids=${cryptoIds}&order=market_cap_desc&per_page=30&page=1&sparkline=false&price_change_percentage=24h`
+      `${COINGECKO_API_BASE}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=24h`
     );
     
     if (!response.ok) {

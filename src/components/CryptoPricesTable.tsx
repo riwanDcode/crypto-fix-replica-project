@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Search, RefreshCw } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -33,6 +32,26 @@ const CryptoPricesTable = () => {
   );
 
   const lastUpdated = dataUpdatedAt ? new Date(dataUpdatedAt).toLocaleTimeString() : '';
+
+  // Generate page numbers to display (up to 10 pages)
+  const getVisiblePages = () => {
+    const maxVisiblePages = 10;
+    const pages = [];
+    
+    if (totalPages <= maxVisiblePages) {
+      // Show all pages if total is 10 or less
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      // Show first 10 pages for simplicity
+      for (let i = 1; i <= maxVisiblePages; i++) {
+        pages.push(i);
+      }
+    }
+    
+    return pages;
+  };
 
   return (
     <section className="text-white">
@@ -132,7 +151,7 @@ const CryptoPricesTable = () => {
           {totalPages > 0 && (
             <div className="flex justify-center mt-6">
               <div className="flex space-x-2">
-                {Array.from({ length: Math.min(10, totalPages) }, (_, i) => i + 1).map((page) => (
+                {getVisiblePages().map((page) => (
                   <button
                     key={page}
                     onClick={() => setCurrentPage(page - 1)}

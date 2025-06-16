@@ -1,4 +1,3 @@
-
 // CoinGecko API service for fetching real-time cryptocurrency data
 const COINGECKO_API_BASE = 'https://api.coingecko.com/api/v3';
 
@@ -49,12 +48,10 @@ const cryptoMapping = {
   'bittensor': { icon: 'T', color: 'text-gray-400' },
   'wrapped-bitcoin': { icon: '⟐', color: 'text-orange-500' },
   'pepe': { icon: '🐸', color: 'text-green-500' },
-  'chainlink': { icon: '⌘', color: 'text-blue-500' },
   'leo-token': { icon: 'L', color: 'text-blue-400' },
   'kaspa': { icon: 'K', color: 'text-blue-300' },
   'ethereum-classic': { icon: 'Ξ', color: 'text-green-400' },
   'render-token': { icon: 'R', color: 'text-purple-400' },
-  'internet-computer': { icon: '∞', color: 'text-orange-400' },
   'artificial-superintelligence-alliance': { icon: 'A', color: 'text-cyan-400' },
   'celestia': { icon: '✦', color: 'text-purple-300' },
   'first-digital-usd': { icon: 'F', color: 'text-blue-400' },

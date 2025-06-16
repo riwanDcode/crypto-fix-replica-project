@@ -1,14 +1,17 @@
+
 import { useState } from "react";
-import { Search, RefreshCw } from "lucide-react";
+import { Search, RefreshCw, ChevronLeft, ChevronRight } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCryptoPrices } from "@/services/cryptoService";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const ITEMS_PER_PAGE = 10;
 
 const CryptoPricesTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
+  const isMobile = useIsMobile();
 
   const { data: cryptoTableData = [], isLoading, error, isFetching, dataUpdatedAt } = useQuery({
     queryKey: ['cryptoPricesTable'],
@@ -33,24 +36,46 @@ const CryptoPricesTable = () => {
 
   const lastUpdated = dataUpdatedAt ? new Date(dataUpdatedAt).toLocaleTimeString() : '';
 
-  // Generate page numbers to display (up to 10 pages)
+  // Generate page numbers to display based on screen size
   const getVisiblePages = () => {
-    const maxVisiblePages = 10;
+    const maxVisiblePages = isMobile ? 3 : 10;
     const pages = [];
     
     if (totalPages <= maxVisiblePages) {
-      // Show all pages if total is 10 or less
+      // Show all pages if total is within limit
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
       }
     } else {
-      // Show first 10 pages for simplicity
-      for (let i = 1; i <= maxVisiblePages; i++) {
-        pages.push(i);
+      if (isMobile) {
+        // Mobile: Show current page ± 1 (max 3 pages)
+        const startPage = Math.max(1, currentPage + 1 - 1);
+        const endPage = Math.min(totalPages, startPage + 2);
+        
+        for (let i = startPage; i <= endPage; i++) {
+          pages.push(i);
+        }
+      } else {
+        // Desktop: Show first 10 pages
+        for (let i = 1; i <= Math.min(maxVisiblePages, totalPages); i++) {
+          pages.push(i);
+        }
       }
     }
     
     return pages;
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages - 1) {
+      setCurrentPage(currentPage + 1);
+    }
   };
 
   return (
@@ -147,15 +172,36 @@ const CryptoPricesTable = () => {
             </div>
           </div>
 
-          {/* Pagination */}
+          {/* Responsive Pagination */}
           {totalPages > 0 && (
             <div className="flex justify-center mt-6">
-              <div className="flex space-x-2">
+              <div className="flex items-center space-x-2">
+                {/* Previous Button - Show on mobile or when not on first page */}
+                {(isMobile || currentPage > 0) && (
+                  <button
+                    onClick={handlePreviousPage}
+                    disabled={currentPage === 0 || isLoading}
+                    className={`${
+                      isMobile ? 'w-10 h-10' : 'px-3 py-2'
+                    } rounded flex items-center justify-center ${
+                      currentPage === 0 
+                        ? 'bg-slate-600 text-gray-500 cursor-not-allowed' 
+                        : 'bg-slate-700 text-gray-300 hover:bg-slate-600'
+                    } transition-colors`}
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                    {!isMobile && <span className="ml-1">Prev</span>}
+                  </button>
+                )}
+
+                {/* Page Numbers */}
                 {getVisiblePages().map((page) => (
                   <button
                     key={page}
                     onClick={() => setCurrentPage(page - 1)}
-                    className={`w-10 h-10 rounded ${
+                    className={`${
+                      isMobile ? 'w-10 h-10' : 'w-10 h-10'
+                    } rounded ${
                       currentPage === page - 1
                         ? 'bg-orange-400 text-white' 
                         : 'bg-slate-700 text-gray-300 hover:bg-slate-600'
@@ -165,6 +211,24 @@ const CryptoPricesTable = () => {
                     {page}
                   </button>
                 ))}
+
+                {/* Next Button - Show on mobile or when not on last page */}
+                {(isMobile || currentPage < totalPages - 1) && (
+                  <button
+                    onClick={handleNextPage}
+                    disabled={currentPage >= totalPages - 1 || isLoading}
+                    className={`${
+                      isMobile ? 'w-10 h-10' : 'px-3 py-2'
+                    } rounded flex items-center justify-center ${
+                      currentPage >= totalPages - 1 
+                        ? 'bg-slate-600 text-gray-500 cursor-not-allowed' 
+                        : 'bg-slate-700 text-gray-300 hover:bg-slate-600'
+                    } transition-colors`}
+                  >
+                    {!isMobile && <span className="mr-1">Next</span>}
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                )}
               </div>
             </div>
           )}

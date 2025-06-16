@@ -11,14 +11,14 @@ const services = [
     category: "migration"
   },
   {
-    title: "Validate Wallet",
+    title: "Validation",
     description: "Click here for validation issues",
     icon: "💳",
     category: "validation"
   },
   {
-    title: "General Issues",
-    description: "Click here for general wallet issues",
+    title: "Wallet Synchronization",
+    description: "Click here for wallet synchronization issues",
     icon: "🔧",
     category: "general"
   },

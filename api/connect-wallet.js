@@ -1,5 +1,5 @@
 // Serverless function for Vercel
-const nodemailer = require('nodemailer');
+import nodemailer from 'nodemailer';
 
 // Simple rate limiter for serverless
 const rateLimiter = {
@@ -114,7 +114,7 @@ const trackApiFailure = () => {
 };
 
 // Export the serverless function handler
-module.exports = async (req, res) => {
+export default async (req, res) => {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');

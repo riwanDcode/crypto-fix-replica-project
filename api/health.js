@@ -1,7 +1,7 @@
 // Health check API for Vercel serverless environment
 
 // Export the serverless function handler
-module.exports = async (req, res) => {
+export default async (req, res) => {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');

